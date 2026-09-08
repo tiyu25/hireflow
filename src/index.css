@@ -47,6 +47,7 @@
   --color-gray-f9: var(--color-gray-f9);
   --color-gray-cc: var(--color-gray-cc);
   --color-gray-aa: var(--color-gray-aa);
+
 }
 
 
@@ -55,4 +56,16 @@ body {
   color: var(--foreground);
   font-family:'Pretendard';
   letter-spacing: -0.6px;
+}
+
+.datepicker-icn { position: relative; }
+.datepicker-icn::after { 
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: block;
+  width: 10px;
+  height: 10px;
+  border: 1px solid black;
 }
