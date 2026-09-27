@@ -5,6 +5,9 @@
     --foreground: #444444;
 
     --color-primary: #027AFF;
+    --color-light-primary: #F7FAFE;
+
+    --color-red1: #D50C2A;
     
     --color-black-1: #111111;
     --color-black-2: #222222;
@@ -30,6 +33,9 @@
   --color-background: var(--background);
 
   --color-primary: var(--color-primary);
+  --color-light-primary: var(--color-light-primary);
+
+  --color-red1: var(--color-red1);
 
   --color-black-1: var(--color-black-1);
   --color-black-2: var(--color-black-2);
@@ -54,9 +60,11 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family:'Pretendard';
+  font-family:'SUIT';
   letter-spacing: -0.6px;
 }
+
+.gmarket { font-family: var(--font-gmarket); }
 
 .datepicker-icn { position: relative; }
 .datepicker-icn::after { 
@@ -68,4 +76,14 @@ body {
   width: 10px;
   height: 10px;
   border: 1px solid black;
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }

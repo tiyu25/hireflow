@@ -5,7 +5,9 @@ const Header = () => {
     return (
         <header className="fixed inset-0 h-18.5 bg-white border-b border-gray-e5 z-99">
             <div className="h-full flex items-center justify-between px-6">
-                <img src={Logo} alt="HIREFLOW 로고" />
+                <a href="/dashboard">
+                    <img src={Logo} alt="HIREFLOW 로고" />
+                </a>
                 <div className="flex items-center gap-3">
                     {/* 프로필 사진 */}
                     <div className="w-7 h-7 bg-gray-cc rounded-full overflow-hidden">

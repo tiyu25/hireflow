@@ -1,4 +1,3 @@
-import { useState } from "react";
 import ButtonBace from "../../common/button/ButtonBase";
 import InputField1 from "../../common/form/InputField1";
 import TextareaField1 from "../../common/form/TextareaField1";
@@ -6,41 +5,46 @@ import TextareaField1 from "../../common/form/TextareaField1";
 import Delete from "@/assets/images/del_icn.svg";
 import Collapsible from "./Collapsible";
 
-interface QuestionAnswer {
+export interface QuestionAnswer {
     question: string;
     answer: string;
 }
 
-const InterviewQuestionSection = () => {
-    const [questions, setQuestions] = useState<QuestionAnswer[]>([
-        { question: "", answer: "" },
-    ]);
+interface InterviewQuestionProps {
+    questions: QuestionAnswer[];
+    onQuestions: (value: QuestionAnswer[]) => void;
+}
+
+const InterviewQuestionSection = ({ questions, onQuestions }: InterviewQuestionProps) => {
 
     const handleQuestionChange = (index: number, value: string) => {
-        setQuestions((prev) =>
-            prev.map((qa, i) => (i === index ? {...qa, question: value}: qa))
+        const updated = questions.map((qa, i) => 
+            i === index ? {...qa, question: value} : qa
         );
+        onQuestions(updated);
     };
 
     const handleAnswerChange = (index: number, value: string) => {
-        setQuestions((prev) =>
-            prev.map((qa, i) => (i === index ? { ...qa, answer: value } : qa))
+        const updated = questions.map((qa, i) => 
+            i === index ? {...qa, answer: value} : qa
         );
+        onQuestions(updated);
     };
 
     const handleDelete = (index: number) => {
         if(confirm("질문을 삭제하시겠습니까?")) {
-            setQuestions((prev) => prev.filter((_, i) => i !== index));
+            const updated = questions.filter((_, i) => i !== index);
+            onQuestions(updated);
         }
     };
 
     const handleAdd = () => {
-        setQuestions((prev) => [...prev, { question: "", answer: "" }]);
+        onQuestions([...questions, { question: "", answer: "" }]);
     };
 
     const handleDeleteAll = () => {
         if(confirm("전체 삭제 하시겠습니까?")) {
-            setQuestions([{ question: "", answer: "" }]);
+            onQuestions([{ question: "", answer: "" }]);
         }
     };
     
@@ -50,7 +54,7 @@ const InterviewQuestionSection = () => {
                 {questions.map((qa, i) => (
                     <div key={i} className="p-4 bg-gray-f9 rounded-lg">
                         <div className="flex justify-between mb-4">
-                            <p className="text-black-6 text-[15px] font-semibold">Q. 질문 1</p>
+                            <p className="text-black-6 text-[15px] font-semibold">Q. 질문 {i + 1}</p>
                             <button
                                 className="cursor-pointer"
                                 onClick={() => handleDelete(i)}

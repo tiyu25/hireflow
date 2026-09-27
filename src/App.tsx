@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import './App.css'
 import type { Session } from '@supabase/supabase-js'
 import { supabase } from './lib/supabase';
-import FormContainer from './components/dashboard/form/FormContainer';
 import { BrowserRouter } from 'react-router-dom';
 import Router from './router/Router';
 
@@ -27,17 +26,6 @@ function App() {
     }
   }, []);
 
-  if (session) {
-    const provider = session.user.app_metadata.provider;
-
-    if (provider === "kakao") {
-      return <div>카카오 로그인 완료</div>;
-    }
-
-    if (provider === "google") {
-      return <div>구글 로그인 완료</div>;
-    }
-  }
 
   return (
     <BrowserRouter>

@@ -61,3 +61,33 @@
 	src: url('/fonts/GmarketSansBold.otf') format('opentype'),
 		url('/fonts/GmarketSansBold.woff') format('woff')
 }
+
+
+/***** SUIT *****/
+@font-face {
+	font-family:'SUIT'; font-weight:300; font-display:swap;
+	src: url('/fonts/SUIT-Light.otf') format('opentype'),
+		url('/fonts/SUIT-Light.woff') format('woff')
+}
+@font-face {
+	font-family:'SUIT'; font-weight:400; font-display:swap;
+	src: url('/fonts/SUIT-Regular.otf') format('opentype'),
+		url('/fonts/SUIT-Regular.woff') format('woff')
+}
+@font-face {
+	font-family:'SUIT'; font-weight:500; font-display:swap;
+	src: url('/fonts/SUIT-Medium.otf') format('opentype'),
+		url('/fonts/SUIT-Medium.woff') format('woff')
+}
+@font-face {
+	font-family:'SUIT'; font-weight:600; font-display:swap;
+	src: url('/fonts/SUIT-SemiBold.otf') format('opentype'),
+		url('/fonts/SUIT-SemiBold.woff') format('woff')
+}
+@font-face {
+	font-family:'SUIT'; font-weight:700; font-display:swap;
+	src: url('/fonts/SUIT-Bold.otf') format('opentype'),
+		url('/fonts/SUIT-Bold.woff') format('woff')
+}
+
+
