@@ -8,10 +8,10 @@ interface LoginButtonProps {
 const LoginButton = ({ icon, className, children, onClick }: LoginButtonProps) => {
     return (
         <button
-            className={`${className} flex items-center justify-center gap-2 w-full h-14 rounded-sm font-semibold`}
+            className={`${className} flex items-center justify-center gap-2 w-full h-14 rounded-sm font-semibold cursor-pointer`}
             onClick={onClick}
         >
-            <img src={icon} alt="" />
+            <img src={icon} alt="" className="h-5" />
             {children}
         </button>
     )

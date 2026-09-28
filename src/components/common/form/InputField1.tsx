@@ -21,11 +21,11 @@ const InputField1 = forwardRef<HTMLInputElement, InputField1Props> (
         const inputId = id ?? generatedId;
 
         return (
-            <div className="flex">
+            <div className="flex md:flex-row flex-col">
                 {label && (
                     <label 
                         htmlFor={inputId}
-                        className={`${labelClassName ?? ""} shrink-0 w-35 leading-9 text-[15px] text-black-5 font-semibold`}
+                        className={`${labelClassName ?? ""} shrink-0 w-35 leading-9 text-sm xl:text-md text-black-5 font-semibold`}
                     >
                         {label}
                     </label>
@@ -35,7 +35,7 @@ const InputField1 = forwardRef<HTMLInputElement, InputField1Props> (
                         ref={ref}
                         id={inputId}
                         {...rest}
-                        className={`${inputClassName ?? ""} datepicker-icn h-10 py-2.5 px-3 text-[15px] border border-gray-e5 rounded-sm`}
+                        className={`${inputClassName ?? ""} datepicker-icn h-9 md:h-10 py-2.5 px-3 text-sm xl:text-md border border-gray-e5 rounded-sm`}
                     />
                     {icon && (
                         <span className="absolute top-3 right-3 block">

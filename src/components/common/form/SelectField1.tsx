@@ -31,11 +31,11 @@ const SelectField1 = forwardRef<HTMLSelectElement, SelectField1Props>(
         const selectId = id ?? generatedId;
 
         return (
-            <div className="flex">
+            <div className="flex md:flex-row flex-col">
                 {label && (
                     <label 
                         htmlFor={selectId}
-                        className={`${labelClassName ?? ""} shrink-0 w-35 leading-9 text-[15px] font-semibold`}
+                        className={`${labelClassName ?? ""} shrink-0 w-35 leading-9 text-sm xl:text-md font-semibold`}
                     >
                         {label}
                     </label>
@@ -45,7 +45,7 @@ const SelectField1 = forwardRef<HTMLSelectElement, SelectField1Props>(
                         ref={ref}
                         id={selectId}
                         {...rest}
-                        className={`${selectClassName ?? ""} appearance-none w-50 h-10 px-3 text-[15px] border border-gray-e5 rounded-sm`}
+                        className={`${selectClassName ?? ""} appearance-none w-full md:w-50 h-9 md:h-10 px-3 text-sm xl:text-md border border-gray-e5 rounded-sm`}
                     >
                         {placeholder && (
                             <option value="" hidden>{placeholder}</option>

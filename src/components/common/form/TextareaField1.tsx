@@ -18,7 +18,7 @@ const TextareaField1 = forwardRef<HTMLTextAreaElement, TextareaField1Props> (
                 {label && (
                     <label
                         htmlFor={inputId}
-                        className={`${labelClassName ?? ""} shrink-0 w-35 leading-9 text-[15px] font-semibold`}
+                        className={`${labelClassName ?? ""} shrink-0 w-35 leading-9 xl:text-md font-semibold`}
                     >
                         {label}
                     </label>
@@ -27,7 +27,7 @@ const TextareaField1 = forwardRef<HTMLTextAreaElement, TextareaField1Props> (
                     ref={ref}
                     id={inputId}
                     {...rest}
-                    className={`${textareaClassName ?? ""} py-2.5 px-3 text-[15px] border border-gray-e5 bg-white resize-none rounded-sm`}
+                    className={`${textareaClassName ?? ""} py-2.5 px-3 xl:text-md border border-gray-e5 bg-white resize-none rounded-sm`}
                 ></textarea>
             </div>
         )

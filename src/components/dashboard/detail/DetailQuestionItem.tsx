@@ -9,14 +9,14 @@ const DetailQuestionItem = ({ question, answer }: { question: string; answer: st
     return (
         <div>
             <button
-                className="flex items-center gap-1 font-semibold text-[17px] cursor-pointer"
+                className="flex items-center gap-1 font-semibold text-sm xl:text-[1.063rem] cursor-pointer"
                 onClick={toggleOpen}
             >
                 Q. {question}
                 <img src={open ? ToggleArrowActive : ToggleArrow} alt="" />
             </button>
             <div className={`${open ? "" : "hidden"}`}>
-                <p className="mt-1 text-black-6">{answer}</p>
+                <p className="mt-1 text-sm xl:text-base text-black-6">{answer}</p>
             </div>
         </div>
     )

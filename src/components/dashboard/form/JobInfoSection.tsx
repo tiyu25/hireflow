@@ -105,7 +105,7 @@ const JobInfoSection = ({ status, onStatusChange, url, onUrlChange, companyName,
                         selected={deadline}
                         onChange={onDeadlineChange}
                         placeholder="YYYY-MM-DD"
-                        inputClassName="w-50"
+                        inputClassName="w-full md:w-50"
                     />
                 )}
                 {visibleFields.includes("applicationDate") && (
@@ -114,7 +114,7 @@ const JobInfoSection = ({ status, onStatusChange, url, onUrlChange, companyName,
                         selected={applicationDate}
                         onChange={onApplicationDateChange}
                         placeholder="YYYY-MM-DD"
-                        inputClassName="w-50"
+                        inputClassName="w-full md:w-50"
                     />
                 )}
                 {visibleFields.includes("interviewDate") && (
@@ -123,7 +123,7 @@ const JobInfoSection = ({ status, onStatusChange, url, onUrlChange, companyName,
                         selected={interviewDate}
                         onChange={onInterviewDateChange}
                         placeholder="YYYY-MM-DD"
-                        inputClassName="w-50"
+                        inputClassName="w-full md:w-50"
                     />
                 )}
                 {visibleFields.includes("startDate") && (
@@ -132,7 +132,7 @@ const JobInfoSection = ({ status, onStatusChange, url, onUrlChange, companyName,
                         selected={startDate}
                         onChange={onStartDateChange}
                         placeholder="YYYY-MM-DD"
-                        inputClassName="w-50"
+                        inputClassName="w-full md:w-50"
                     />
                 )}
             </div>

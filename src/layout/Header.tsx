@@ -9,10 +9,6 @@ const Header = () => {
                     <img src={Logo} alt="HIREFLOW 로고" />
                 </a>
                 <div className="flex items-center gap-3">
-                    {/* 프로필 사진 */}
-                    <div className="w-7 h-7 bg-gray-cc rounded-full overflow-hidden">
-
-                    </div>
                     <button
                         className="flex items-center gap-1 font-medium text-sm text-black-6"
                     >

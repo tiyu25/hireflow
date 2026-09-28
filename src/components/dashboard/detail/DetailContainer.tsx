@@ -64,65 +64,65 @@ const DetailContainer = () => {
     
 
     return (
-        <div className="bg-[#F7FAFE] py-18">
-            <div className="flex flex-col gap-4 w-250 mx-auto">
+        <div className="bg-[#F7FAFE] py-10 xl:py-18 xl:px-0 px-8">
+            <div className="flex flex-col gap-4 w-full xl:w-250 mx-auto">
                 {/* 채용 정보 */}
                 <div className="p-6 bg-white shadow-[0_0_6px_0_#EBF1FA] rounded-2xl">
                     <div>
                         {/* 지원 전 */}
                         <span
-                            className="inline-flex items-center h-7 px-2 text-primary text-sm font-medium bg-light-primary rounded-md"
+                            className="inline-flex items-center h-7 px-2 text-primary text-xs xl:text-sm font-medium bg-light-primary rounded-md"
                         >
                             {(application.status === "planned" || application.status === "applied") && `서류 마감 ${getDday(application.deadline)}`}
                             {application.status === "interview" && `면접 ${getDday(application.interview_date)}`}
                         </span>
                     </div>
-                    <div className="mt-4">
-                        <span className="text-lg text-black-5">{application?.company_name}</span>
-                        <div className="flex items-center gap-2 mt-1">
-                            <strong className="text-2xl">{application.job_title}</strong>
+                    <div className="mt-3 xl:mt-4">
+                        <span className="text-md xl:text-lg text-black-5">{application?.company_name}</span>
+                        <div className="flex flex-wrap items-center gap-2 mt-1">
+                            <strong className="text-xl xl:text-2xl">{application.job_title}</strong>
                             <ApplicationStatusBadge status={application.status} />
                         </div>
                     </div>
-                    <div className="mt-8">
-                        <div className="grid grid-cols-2 gap-y-4">
+                    <div className="mt-6 xl:mt-8">
+                        <div className="flex flex-col md:grid md:grid-cols-2 gap-y-4">
                             {(application.status === "planned" || application.status === "interview" || application.status === "reject" || application.status === "pendingInterview" || application.status === "applied" || application.status === "finalPass") && (
-                                <div className="flex">
-                                    <strong className="block shrink-0 w-30 text-black-6 text-[15px]">서류 마감일</strong>
-                                    <p className="text-black-6 text-[15px]">{application.deadline}</p>
+                                <div className="flex sm:flex-row flex-col gap-1">
+                                    <strong className="block shrink-0 w-30 text-black-6 text-sm xl:text-md">서류 마감일</strong>
+                                    <p className="text-black-6 text-sm xl:text-md">{application.deadline}</p>
                                 </div>
                             )}
                             {(application.status === "interview" || application.status === "reject" || application.status === "pendingInterview" || application.status === "applied" || application.status === "finalPass") && (
-                                <div className="flex">
-                                    <strong className="block shrink-0 w-30 text-black-6 text-[15px]">서류 지원일</strong>
-                                    <p className="text-black-6 text-[15px]">{application.application_date}</p>
+                                <div className="flex sm:flex-row flex-col gap-1">
+                                    <strong className="block shrink-0 w-30 text-black-6 text-sm xl:text-md">서류 지원일</strong>
+                                    <p className="text-black-6 text-sm xl:text-md">{application.application_date}</p>
                                 </div>
                             )}
                             {(application.status === "interview" || application.status === "reject" || application.status === "pendingInterview" || application.status === "finalPass") && (
-                                <div className="flex">
-                                    <strong className="block shrink-0 w-30 text-black-6 text-[15px]">면접일</strong>
-                                    <p className="text-black-6 text-[15px]">{application.interview_date}</p>
+                                <div className="flex sm:flex-row flex-col gap-1">
+                                    <strong className="block shrink-0 w-30 text-black-6 text-sm xl:text-md">면접일</strong>
+                                    <p className="text-black-6 text-sm xl:text-md">{application.interview_date}</p>
                                 </div>
                             )}
                             {(application.status === "finalPass") && (
-                                <div className="flex">
-                                    <strong className="block shrink-0 w-30 text-black-6 text-[15px]">출근 예정일</strong>
-                                    <p className="text-black-6 text-[15px]">{application.start_date}</p>
+                                <div className="flex sm:flex-row flex-col gap-1">
+                                    <strong className="block shrink-0 w-30 text-black-6 text-sm xl:text-md">출근 예정일</strong>
+                                    <p className="text-black-6 text-sm xl:text-md">{application.start_date}</p>
                                 </div>
                             )}
-                            <div className="flex">
-                                <strong className="block shrink-0 w-30 text-black-6 text-[15px]">지원 현황</strong>
-                                <p className="text-black-6 text-[15px]">{application.status ? STATUS_LABELS[application.status] : "-"}</p>
+                            <div className="flex sm:flex-row flex-col gap-1">
+                                <strong className="block shrink-0 w-30 text-black-6 text-sm xl:text-md">지원 현황</strong>
+                                <p className="text-black-6 text-sm xl:text-md">{application.status ? STATUS_LABELS[application.status] : "-"}</p>
                             </div>
-                            <div className="flex">
-                                <strong className="block shrink-0 w-30 text-black-6 text-[15px]">지원 플랫폼</strong>
-                                <p className="text-black-6 text-[15px]">{application.platform ? PLATFORM_LABELS[application.platform] ?? application.platform : ""}</p>
+                            <div className="flex sm:flex-row flex-col gap-1">
+                                <strong className="block shrink-0 w-30 text-black-6 text-sm xl:text-md">지원 플랫폼</strong>
+                                <p className="text-black-6 text-sm xl:text-md">{application.platform ? PLATFORM_LABELS[application.platform] ?? application.platform : ""}</p>
                             </div>
-                            <div className="flex col-span-2">
-                                <strong className="block shrink-0 w-30 text-black-6 text-[15px]">채용공고 URL</strong>
+                            <div className="flex sm:flex-row flex-col col-span-2 gap-1">
+                                <strong className="block shrink-0 w-30 text-black-6 text-sm xl:text-md">채용공고 URL</strong>
                                 <a
                                     href={application.url ?? "#"}
-                                    className="text-black-6 text-[15px] underline"
+                                    className="text-black-6 text-sm xl:text-md underline"
                                 >
                                     채용공고 바로가기
                                 </a>
@@ -136,23 +136,23 @@ const DetailContainer = () => {
                     <div className="rounded-[calc(1rem-2px)] bg-[#F7FAFE] p-6">
                         <div className="flex gap-1 items-center">
                             <img src={Star} alt="" />
-                            <strong className="text-lg bg-linear-to-r from-[#71B4FF] to-[#A055FF] bg-clip-text text-transparent">
+                            <strong className="text-md xl:text-lg bg-linear-to-r from-[#71B4FF] to-[#A055FF] bg-clip-text text-transparent">
                                 AI가 분석한 채용공고
                             </strong>
                         </div>
-                        <p className="mt-2 text-[15px] text-black-5">분석한 내용이 들어갑니다.</p>
+                        <p className="mt-2 text-sm xl:text-md text-black-5">분석한 내용이 들어갑니다.</p>
                     </div>
                 </div>
 
                 {/* 메모 */}
                 <div className="h-75 p-6 bg-white shadow-[0_0_6px_0_#EBF1FA] rounded-2xl">
-                    <strong className="w-full flex items-center justify-between pb-6 text-lg">메모</strong>
-                    <p className="text-[15px] text-black-5">{application.memo}</p>
+                    <strong className="w-full flex items-center justify-between pb-4 xl:pb-6 text-md xl:text-lg">메모</strong>
+                    <p className="text-sm xl:text-md text-black-5">{application.memo}</p>
                 </div>
 
                 {/* 예상 면접 질문 */}
                 <div className="p-6 bg-white shadow-[0_0_6px_0_#EBF1FA] rounded-2xl">
-                    <strong className="w-full flex items-center justify-between pb-6 text-lg">예상 면접 질문</strong>
+                    <strong className="w-full flex items-center justify-between pb-4 xl:pb-6 text-md xl:text-lg">예상 면접 질문</strong>
                     <div>
                         <div className="flex flex-col gap-4">
                             {questions.length > 0 ? (
@@ -166,10 +166,11 @@ const DetailContainer = () => {
                     </div>
                 </div>
 
-                <div className="flex justify-center gap-2 mt-6">
+                <div className="flex justify-center md:flex-row flex-col gap-2 mt-3 md:mt-6">
                     <ButtonBase
                         base="base2"
                         className="bg-black-6 text-white"
+                        onClick={() => navigate(-1)}
                     >
                         이전으로
                     </ButtonBase>

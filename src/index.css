@@ -53,9 +53,16 @@
   --color-gray-f9: var(--color-gray-f9);
   --color-gray-cc: var(--color-gray-cc);
   --color-gray-aa: var(--color-gray-aa);
-
 }
 
+html {
+  font-size: 16px;
+}
+@media (min-width: 1280px) {
+  html {
+    font-size: clamp(8.533px, 0.8333vw, 16px);
+  }
+}
 
 body {
   background: var(--background);

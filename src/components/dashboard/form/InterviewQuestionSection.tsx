@@ -54,7 +54,7 @@ const InterviewQuestionSection = ({ questions, onQuestions }: InterviewQuestionP
                 {questions.map((qa, i) => (
                     <div key={i} className="p-4 bg-gray-f9 rounded-lg">
                         <div className="flex justify-between mb-4">
-                            <p className="text-black-6 text-[15px] font-semibold">Q. 질문 {i + 1}</p>
+                            <p className="text-black-6 lg:text-md font-semibold">Q. 질문 {i + 1}</p>
                             <button
                                 className="cursor-pointer"
                                 onClick={() => handleDelete(i)}

@@ -160,12 +160,15 @@ const FormContainer = () => {
 
     
     return (
-        <div className="bg-[#F7FAFE] pb-18">
-            <button className="p-7">
+        <div className="bg-[#F7FAFE] pb-10 xl:pb-18">
+            <button 
+                className="p-7 cursor-pointer"
+                onClick={() => navigate(-1)}
+            >
                 <img src={PagePrev} alt="" />
             </button>
-            <div className="w-250 mx-auto">
-                <strong className="block text-[30px] text-center mb-10">{isEditMode ? "일정 수정" : "일정 등록"}</strong>
+            <div className="w-full xl:w-250 mx-auto xl:px-0 px-8">
+                <strong className="block text-xl xl:text-3xl text-center mb-7 md:mb-10">{isEditMode ? "일정 수정" : "일정 등록"}</strong>
                 <div className="flex flex-col gap-4">
                     {/* 채용 정보 */}
                     <FormCard>
