@@ -1,6 +1,6 @@
 import type { Application } from "../../../../api/applications";
 import { PLATFORM_LABELS, STATUS_LABELS } from "../../../../constants/application";
-import { getDday, getDdayInfo } from "../../../../utils/dateCount";
+import { getDdayInfo } from "../../../../utils/dateCount";
 import ApplicationStatusBadge from "../../../common/status/ApplicationStatusBadge";
 import DetailInfoRow from "./DetailInfoRow";
 
