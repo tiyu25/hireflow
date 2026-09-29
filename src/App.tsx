@@ -4,6 +4,7 @@ import type { Session } from '@supabase/supabase-js'
 import { supabase } from './lib/supabase';
 import { BrowserRouter } from 'react-router-dom';
 import Router from './router/Router';
+import LoadingOverlay from './components/common/loading/LoadingOverlay';
 
 function App() {
   const [session, setSession] = useState<Session | null>(null);
@@ -30,7 +31,7 @@ function App() {
   }, []);
 
   if (isLoading) {
-    return <div>로딩 중...</div>
+    return <LoadingOverlay />
   }
 
 

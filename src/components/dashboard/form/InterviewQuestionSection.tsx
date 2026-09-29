@@ -12,39 +12,39 @@ export interface QuestionAnswer {
 
 interface InterviewQuestionProps {
     questions: QuestionAnswer[];
-    onQuestions: (value: QuestionAnswer[]) => void;
+    onQuestionsChange: (value: QuestionAnswer[]) => void;
 }
 
-const InterviewQuestionSection = ({ questions, onQuestions }: InterviewQuestionProps) => {
+const InterviewQuestionSection = ({ questions, onQuestionsChange }: InterviewQuestionProps) => {
 
     const handleQuestionChange = (index: number, value: string) => {
         const updated = questions.map((qa, i) => 
             i === index ? {...qa, question: value} : qa
         );
-        onQuestions(updated);
+        onQuestionsChange(updated);
     };
 
     const handleAnswerChange = (index: number, value: string) => {
         const updated = questions.map((qa, i) => 
             i === index ? {...qa, answer: value} : qa
         );
-        onQuestions(updated);
+        onQuestionsChange(updated);
     };
 
     const handleDelete = (index: number) => {
         if(confirm("질문을 삭제하시겠습니까?")) {
             const updated = questions.filter((_, i) => i !== index);
-            onQuestions(updated);
+            onQuestionsChange(updated);
         }
     };
 
     const handleAdd = () => {
-        onQuestions([...questions, { question: "", answer: "" }]);
+        onQuestionsChange([...questions, { question: "", answer: "" }]);
     };
 
     const handleDeleteAll = () => {
         if(confirm("전체 삭제 하시겠습니까?")) {
-            onQuestions([{ question: "", answer: "" }]);
+            onQuestionsChange([{ question: "", answer: "" }]);
         }
     };
     

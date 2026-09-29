@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import ButtonBase from "../../common/button/ButtonBase";
-import FormCard from "./FormCard";
 import InterviewQuestionSection, { type QuestionAnswer } from "./InterviewQuestionSection";
 import JobInfoSection, { STATUS_TO_FIELDS } from "./JobInfoSection";
 import MemoSection from "./MemoSection";
@@ -10,6 +9,9 @@ import { supabase } from "../../../lib/supabase";
 import { createApplication, createInterviewQuestions, deleteInterviewQuestions, getApplicationById, getInterviewQuestions, updateApplication } from "../../../api/applications";
 import type { ApplicationStatus } from "../../../constants/ApplicationStatus";
 import { useNavigate, useParams } from "react-router-dom";
+import ShadowCard from "../ShadowCard";
+import ButtonGroup from "../../common/button/ButtonGroup";
+import LoadingOverlay from "../../common/loading/LoadingOverlay";
 
 const FormContainer = () => {
     const { id } = useParams<{ id: string }>();
@@ -30,35 +32,44 @@ const FormContainer = () => {
     ]);
     const [memo, setMemo] = useState("");
 
+    const [isLoading, setIsLoading] = useState<boolean>(isEditMode);
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
     // 수정 모드일 때 기존 데이터 불러오기
     useEffect(() => {
         if (!id) return;
 
+        const applicationId = Number(id);
+
         const fetchExisting = async () => {
-            const { data: application, error: applicationError } = await getApplicationById(Number(id));
-            if (applicationError || !application) {
-                console.error(applicationError);
-                return;
-            }
-
-            setStatus(application.status);
-            setUrl(application.url ?? "");
-            setCompanyName(application.company_name ?? "");
-            setJobTitle(application.job_title ?? "");
-            setPlatform(application.platform ?? "saramin");
-            setDeadline(application.deadline ? new Date(application.deadline) : null);
-            setApplicationDate(application.application_date ? new Date(application.application_date) : null);
-            setInterviewDate(application.interview_date ? new Date(application.interview_date) : null);
-            setStartDate(application.start_date ? new Date(application.start_date) : null);
-            setMemo(application.memo ?? "");
-
-            const { data: questionsData, error: questionsError } = await getInterviewQuestions(Number(id));
-            if (questionsError || !questionsData) {
-                console.error(questionsError);
-                return;
-            }
-            if (questionsData.length > 0) {
-                setQuestions(questionsData.map((q) => ({ question: q.question, answer: q.answer })))
+            try {
+                const { data: application, error: applicationError } = await getApplicationById(applicationId);
+                if (applicationError || !application) {
+                    console.error(applicationError);
+                    return;
+                }
+    
+                setStatus(application.status);
+                setUrl(application.url ?? "");
+                setCompanyName(application.company_name ?? "");
+                setJobTitle(application.job_title ?? "");
+                setPlatform(application.platform ?? "saramin");
+                setDeadline(application.deadline ? new Date(application.deadline) : null);
+                setApplicationDate(application.application_date ? new Date(application.application_date) : null);
+                setInterviewDate(application.interview_date ? new Date(application.interview_date) : null);
+                setStartDate(application.start_date ? new Date(application.start_date) : null);
+                setMemo(application.memo ?? "");
+    
+                const { data: questionsData, error: questionsError } = await getInterviewQuestions(applicationId);
+                if (questionsError || !questionsData) {
+                    console.error(questionsError);
+                    return;
+                }
+                if (questionsData.length > 0) {
+                    setQuestions(questionsData.map((q) => ({ question: q.question, answer: q.answer })))
+                }
+            } finally {
+                setIsLoading(false);
             }
         };
         fetchExisting();
@@ -79,14 +90,21 @@ const FormContainer = () => {
         return null
     }
 
-    const handleSubmit = async () => {
-        // 필수값 검사
-        const errorMsg = validateForm();
-        if (errorMsg) {
-            alert(errorMsg);
-            return;
-        }
+    const applicationInput = {
+        status,
+        url,
+        companyName,
+        jobTitle,
+        platform,
+        deadline,
+        applicationDate,
+        interviewDate,
+        startDate,
+        memo,
+    };
 
+    // 등록
+    const handleCreate = async () => {
         // 현재 로그인한 사용자 정보 가져오기
         const { data: userData, error: userError } = await supabase.auth.getUser();
         if (userError || !userData.user) {
@@ -95,72 +113,82 @@ const FormContainer = () => {
             return;
         }
 
-        const applicationInput = {
-            status,
-            url,
-            companyName,
-            jobTitle,
-            platform,
-            deadline,
-            applicationDate,
-            interviewDate,
-            startDate,
-            memo,
-        };
+        const { data: application, error: applicationError } = await createApplication({
+            userId: userData.user.id,
+            ...applicationInput,
+        });
 
-        if (isEditMode && id) {
-            // 수정 모드
-            const { error: updateError } = await updateApplication(Number(id), applicationInput);
-            if (updateError) {
-                alert("수정에 실패했습니다.");
-                console.error(updateError);
-                return;
-            }
-
-            const { error: deleteError } = await deleteInterviewQuestions(Number(id));
-            if (deleteError) {
-                alert("면접 질문 수정에 실패했습니다.");
-                console.error(deleteError);
-                return;
-            }
-
-            const { error: questionsError } = await createInterviewQuestions(Number(id), questions);
-            if (questionsError) {
-                alert("면접 질문 수정에 실패했습니다.");
-                console.error(questionsError);
-                return;
-            }
-
-            alert("수정되었습니다.");
-            navigate(`/dashboard/detail/${id}`);
-        } else {
-            // 등록 모드
-            const { data: application, error: applicationError } = await createApplication({
-                userId: userData.user.id,
-                ...applicationInput,
-            });
-
-            if (applicationError || !application) {
-                alert("등록에 실패했습니다.");
-                console.error(applicationError);
-                return;
-            }
-
-            const { error: questionsError } = await createInterviewQuestions(application.id, questions);
-            if (questionsError) {
-                alert("면접 질문 등록에 실패했습니다.");
-                console.error(questionsError);
-                return;
-            }
-
-            alert("등록되었습니다.");
-            navigate(`/dashboard/detail/${application.id}`);
+        if (applicationError || !application) {
+            alert("등록에 실패했습니다.");
+            console.error(applicationError);
+            return;
         }
+
+        const { error: questionsError } = await createInterviewQuestions(application.id, questions);
+        if (questionsError) {
+            alert("면접 질문 등록에 실패했습니다.");
+            console.error(questionsError);
+            return;
+        }
+
+        alert("등록되었습니다.");
+        navigate(`/dashboard/detail/${application.id}`);
     }
 
+    // 수정
+    const handleUpdate = async (applicationId: number) => {
+        const { error: updateError } = await updateApplication(applicationId, applicationInput);
+        if (updateError) {
+            alert("수정에 실패했습니다.");
+            console.error(updateError);
+            return;
+        }
+
+        const { error: deleteError } = await deleteInterviewQuestions(applicationId);
+        if (deleteError) {
+            alert("면접 질문 수정에 실패했습니다.");
+            console.error(deleteError);
+            return;
+        }
+
+        const { error: questionsError } = await createInterviewQuestions(applicationId, questions);
+        if (questionsError) {
+            alert("면접 질문 수정에 실패했습니다.");
+            console.error(questionsError);
+            return;
+        }
+
+        alert("수정되었습니다.");
+        navigate(`/dashboard/detail/${applicationId}`);
+    }
+
+
+    const handleSubmit = async () => {
+        if (isSubmitting) return; // 중복 실행 방지 이미 저장 중이면 무시
+
+        // 필수값 검사
+        const errorMsg = validateForm();
+        if (errorMsg) {
+            alert(errorMsg);
+            return;
+        }
+
+        setIsSubmitting(true);
+
+        try {
+            if (id) {
+                await handleUpdate(Number(id));
+            } else {
+                await handleCreate();
+            }
+        } finally {
+            setIsSubmitting(false);
+        }
+    }
     
     return (
         <div className="bg-[#F7FAFE] pb-10 xl:pb-18">
+            <LoadingOverlay isVisible={isLoading || isSubmitting} />
             <button 
                 className="p-7 cursor-pointer"
                 onClick={() => navigate(-1)}
@@ -171,7 +199,7 @@ const FormContainer = () => {
                 <strong className="block text-xl xl:text-3xl text-center mb-7 md:mb-10">{isEditMode ? "일정 수정" : "일정 등록"}</strong>
                 <div className="flex flex-col gap-4">
                     {/* 채용 정보 */}
-                    <FormCard>
+                    <ShadowCard>
                         <JobInfoSection
                             status={status} onStatusChange={setStatus}
                             url={url} onUrlChange={setUrl}
@@ -183,22 +211,22 @@ const FormContainer = () => {
                             interviewDate={interviewDate} onInterviewDateChange={setInterviewDate}
                             startDate={startDate} onStartDateChange={setStartDate}
                         />
-                    </FormCard>
+                    </ShadowCard>
                     {/* 예상 면접 질문 */}
-                    <FormCard>
+                    <ShadowCard>
                         <InterviewQuestionSection
-                            questions={questions} onQuestions={setQuestions}
+                            questions={questions} onQuestionsChange={setQuestions}
                         />
-                    </FormCard>
+                    </ShadowCard>
                     {/* 메모 */}
-                    <FormCard>
+                    <ShadowCard>
                         <MemoSection 
-                            memo={memo} onMemo={setMemo}
+                            memo={memo} onMemoChange={setMemo}
                         />
-                    </FormCard>
+                    </ShadowCard>
                 </div>
             </div>
-            <div className="flex justify-center mt-8">
+            <ButtonGroup>
                 <ButtonBase
                     base="base2"
                     className="bg-primary text-white"
@@ -206,7 +234,7 @@ const FormContainer = () => {
                 >
                     {isEditMode ? "수정하기" : "등록하기"}
                 </ButtonBase>
-            </div>
+            </ButtonGroup>
         </div>
     )
 }

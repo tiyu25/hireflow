@@ -1,7 +1,6 @@
-import { useToggle } from "../../../hooks/useToggle"
-
 import ToggleArrow from "@/assets/images/question_toggle_arr.svg";
 import ToggleArrowActive from "@/assets/images/question_toggle_arr_active.svg";
+import { useToggle } from "../../../../hooks/useToggle";
 
 const DetailQuestionItem = ({ question, answer }: { question: string; answer: string; }) => {
     const [ open, toggleOpen ] = useToggle(true);

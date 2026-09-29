@@ -1,3 +1,5 @@
+import type { Application } from "../api/applications";
+
 export const getDday = (deadline: string | null): string => {
     if (!deadline) return "";
 
@@ -22,3 +24,19 @@ export const formatDate = (dateStr: string | null): string => {
     const dd = String(date.getDate()).padStart(2, "0");
     return `${yyyy}. ${mm}. ${dd}`;
 };
+
+type DdayInfo = {
+    label: string;
+    dday: string;
+}
+
+// 상태에 따라 D-day 보여줄지
+export const getDdayInfo = (application: Application): DdayInfo | null => {
+    if (application.status === "planned" || application.status === "applied") {
+        return { label: "서류 마감", dday: getDday(application.deadline) }
+    }
+    if (application.status === "interview") {
+        return { label: "면접", dday: getDday(application.interview_date) };
+    }
+    return null;
+}
