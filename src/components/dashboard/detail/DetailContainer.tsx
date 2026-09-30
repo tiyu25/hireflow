@@ -75,17 +75,17 @@ const DetailContainer = () => {
                     <DetailApplicationInfo application={application} />
                 </ShadowCard>
 
-                {/* AI가 분석한 채용공고 */}
+                {/* AI가 요약한 채용공고 */}
                 <div className="rounded-2xl bg-linear-to-r from-[#71B4FF] to-[#A055FF] p-0.5">
                     <div className="rounded-[calc(1rem-2px)] bg-[#F7FAFE] p-6">
                         <div className="flex gap-1 items-center">
                             <img src={Star} alt="" />
                             <strong className="text-md xl:text-lg bg-linear-to-r from-[#71B4FF] to-[#A055FF] bg-clip-text text-transparent">
-                                AI가 분석한 채용공고
+                                AI가 요약한 채용공고
                             </strong>
                         </div>
                         <p className="mt-2 text-sm xl:text-md text-black-5">
-                            {application.job_summary ?? "분석된 내용이 없습니다. 채용공고 상세 내용을 입력하면 AI가 요약해드려요."}
+                            {application.job_summary ?? "요약된 내용이 없습니다. 채용공고 상세 내용을 입력하면 AI가 요약해드려요."}
                         </p>
                     </div>
                 </div>
@@ -104,7 +104,7 @@ const DetailContainer = () => {
                     <ButtonBase
                         base="base2"
                         className="bg-black-6 text-white"
-                        onClick={() => navigate(-1)}
+                        onClick={() => navigate(`/dashboard`)}
                     >
                         이전으로
                     </ButtonBase>
