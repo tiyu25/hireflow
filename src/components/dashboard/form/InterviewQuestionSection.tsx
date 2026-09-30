@@ -4,6 +4,7 @@ import TextareaField1 from "../../common/form/TextareaField1";
 
 import Delete from "@/assets/images/del_icn.svg";
 import Collapsible from "./Collapsible";
+import Star from "@/assets/images/star_white_icn.svg";
 
 export interface QuestionAnswer {
     question: string;
@@ -13,9 +14,10 @@ export interface QuestionAnswer {
 interface InterviewQuestionProps {
     questions: QuestionAnswer[];
     onQuestionsChange: (value: QuestionAnswer[]) => void;
+    onGenerateQuestions: () => void;
 }
 
-const InterviewQuestionSection = ({ questions, onQuestionsChange }: InterviewQuestionProps) => {
+const InterviewQuestionSection = ({ questions, onQuestionsChange, onGenerateQuestions }: InterviewQuestionProps) => {
 
     const handleQuestionChange = (index: number, value: string) => {
         const updated = questions.map((qa, i) => 
@@ -50,6 +52,13 @@ const InterviewQuestionSection = ({ questions, onQuestionsChange }: InterviewQue
     
     return (
         <Collapsible title="예상 면접 질문">
+            <button
+                onClick={onGenerateQuestions}
+                className="flex items-center gap-1 w-full py-2 px-3 bg-linear-to-r from-[#71B4FF] to-[#A055FF] text-sm text-white font-bold text-left rounded-md cursor-pointer"
+            >
+                <img src={Star} alt="" />
+                AI 질문 생성하기
+            </button>
             <div className="flex flex-col gap-3 mt-4">
                 {questions.map((qa, i) => (
                     <div key={i} className="p-4 bg-gray-f9 rounded-lg">

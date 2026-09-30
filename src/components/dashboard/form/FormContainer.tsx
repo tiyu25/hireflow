@@ -15,6 +15,7 @@ import LoadingOverlay from "../../common/loading/LoadingOverlay";
 import Collapsible from "./Collapsible";
 import TextareaField1 from "../../common/form/TextareaField1";
 import { summarizeJobDetails } from "../../../api/jobSummary";
+import { generateInterviewQuestions } from "../../../api/aiQuestions";
 
 const FormContainer = () => {
     const { id } = useParams<{ id: string }>();
@@ -41,6 +42,7 @@ const FormContainer = () => {
 
     const [isLoading, setIsLoading] = useState<boolean>(isEditMode);
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+    const [isGeneratingQuestions, setIsGeneratingQuestions] = useState<boolean>(false);
 
     // 수정 모드일 때 기존 데이터 불러오기
     useEffect(() => {
@@ -202,6 +204,37 @@ const FormContainer = () => {
         navigate(`/dashboard/detail/${applicationId}`);
     }
 
+    // AI 예상 면접 질문 생성
+    const handleGenerateQuestions = async () => {
+        if (isGeneratingQuestions) return; // 중복 실행 방지
+
+        if (jobDetails.trim() === "") {
+            alert("채용공고 상세 내용을 먼저 입력해주세요.");
+            return;
+        }
+
+        setIsGeneratingQuestions(true);
+
+        try {
+            const { questions: aiQuestions, error } = await generateInterviewQuestions(jobDetails);
+            if (error || !aiQuestions) {
+                alert(error ?? "질문 생성에 실패했습니다.");
+                return;
+            }
+
+            // 내용이 있는 기존 질문은 유지하고 빈 입력칸은 제거
+            const filledQuestions = questions.filter(
+                (qa) => qa.question.trim() !== "" || qa.answer.trim() !== ""
+            );
+
+            // AI 질문은 답변이 빈 상태로 추가
+            const newQuestions = aiQuestions.map((question) => ({ question, answer: "" }));
+
+            setQuestions([...filledQuestions, ...newQuestions]);
+        } finally {
+            setIsGeneratingQuestions(false);
+        }
+    }
 
     const handleSubmit = async () => {
         if (isSubmitting) return; // 중복 실행 방지 이미 저장 중이면 무시
@@ -228,7 +261,7 @@ const FormContainer = () => {
     
     return (
         <div className="bg-[#F7FAFE] pb-10 xl:pb-18">
-            <LoadingOverlay isVisible={isLoading || isSubmitting} />
+            <LoadingOverlay isVisible={isLoading || isSubmitting || isGeneratingQuestions} />
             <button 
                 className="p-7 cursor-pointer"
                 onClick={() => navigate(-1)}
@@ -265,7 +298,7 @@ const FormContainer = () => {
                     {/* 예상 면접 질문 */}
                     <ShadowCard>
                         <InterviewQuestionSection
-                            questions={questions} onQuestionsChange={setQuestions}
+                            questions={questions} onQuestionsChange={setQuestions} onGenerateQuestions={handleGenerateQuestions}
                         />
                     </ShadowCard>
                     {/* 메모 */}
