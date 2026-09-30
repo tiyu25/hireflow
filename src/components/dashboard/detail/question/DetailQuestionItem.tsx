@@ -15,7 +15,7 @@ const DetailQuestionItem = ({ question, answer }: { question: string; answer: st
                 <img src={open ? ToggleArrowActive : ToggleArrow} alt="" />
             </button>
             <div className={`${open ? "" : "hidden"}`}>
-                <p className="mt-1 text-sm xl:text-base text-black-6">{answer}</p>
+                <p className="mt-1 text-sm xl:text-base text-black-6">{answer.trim() ? answer : "등록된 답변이 없습니다."}</p>
             </div>
         </div>
     )

@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
 import GoogleLoginButton from "./button/GoogleLoginButton";
 import GuestLoginButton from "./button/GuestLoginButton";
@@ -6,6 +7,7 @@ import KakaoLoginButton from "./button/KaKaoLoginButton";
 import Logo from "@/assets/images/logo_col.svg"
 
 const LoginContainer = () => {
+    const navigate = useNavigate();
 
     // 카카오톡 로그인
     const handleKakaoLogin = async () => {
@@ -27,6 +29,17 @@ const LoginContainer = () => {
         }
     }
 
+    // 게스트 로그인
+    const handleGuestLogin = async () => {
+        const { error } = await supabase.auth.signInAnonymously();
+        if (error) {
+            console.error("게스트 로그인 실패: ", error.message);
+            return;
+        }
+
+        navigate("/dashboard");
+    }
+
     return (
         <div className="flex flex-col items-center justify-center h-screen bg-[#F7FAFE]">
             <div className="w-100">
@@ -39,7 +52,7 @@ const LoginContainer = () => {
                     <KakaoLoginButton onClick={handleKakaoLogin} />
                     <GoogleLoginButton onClick={handleGoogleLogin} />
                     <div className="border-t border-gray-e5 pt-4 mt-4">
-                        <GuestLoginButton />
+                        <GuestLoginButton onClick={handleGuestLogin}/>
                     </div>
                 </div>
             </div>
