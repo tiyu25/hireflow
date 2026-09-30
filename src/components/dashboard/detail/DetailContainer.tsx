@@ -84,7 +84,9 @@ const DetailContainer = () => {
                                 AI가 분석한 채용공고
                             </strong>
                         </div>
-                        <p className="mt-2 text-sm xl:text-md text-black-5">분석한 내용이 들어갑니다.</p>
+                        <p className="mt-2 text-sm xl:text-md text-black-5">
+                            {application.job_summary ?? "분석된 내용이 없습니다. 채용공고 상세 내용을 입력하면 AI가 요약해드려요."}
+                        </p>
                     </div>
                 </div>
 

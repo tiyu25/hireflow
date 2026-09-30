@@ -9,10 +9,10 @@ const MIN_TEXT_LENGTH = 50;
 const GEMINI_MODEL = 'gemini-3.5-flash-lite';
 
 const SYSTEM_PROMPT =
-  '너는 채용공고 분석가다. 주어진 채용공고 텍스트를 분석해서 다음 JSON 형식으로만 답하라: ' +
-  '{"companyName": string, "position": string, "requiredSkills": string[], ' +
-  '"preferredSkills": string[], "responsibilities": string[], "summary": string} ' +
-  '채용공고에 없는 내용은 추측하지 말고, 문자열은 빈 문자열("")로, 배열은 빈 배열([])로 채워라.';
+  '너는 채용공고를 요약하는 도우미다. 주어진 채용공고를 한국어 3~4문장으로 간략하게 요약하라. ' +
+  '회사명, 직무, 핵심 자격요건, 우대사항 중 공고에 있는 내용을 중심으로 요약하라. ' +
+  '공고에 없는 내용은 추측하지 마라. ' +
+  '다음 JSON 형식으로만 답하라: {"summary": string}';
 
 // Gemini 응답에서 사용하는 부분만 타입으로 정의
 interface GeminiResponse {

@@ -14,6 +14,8 @@ interface CreateApplicationInput {
     interviewDate: Date | null;
     startDate: Date | null;
     memo: string;
+    jobDetails: string;
+    jobSummary: string | null;
 }
 
 // 채용 일정 생성
@@ -32,6 +34,8 @@ export const createApplication = async (input: CreateApplicationInput) => {
             interview_date: input.interviewDate,
             start_date: input.startDate,
             memo: input.memo,
+            job_details: input.jobDetails,
+            job_summary: input.jobSummary,
         })
         .select()
         .single();
@@ -67,6 +71,8 @@ export interface Application {
     interview_date: string | null;
     start_date: string | null;
     memo: string | null;
+    job_details: string | null;
+    job_summary: string | null;
     created_at: string;
 }
 // (GET) 채용 일정 가져오기
@@ -117,7 +123,9 @@ export const updateApplication = async (id: number, input: Omit<CreateApplicatio
                 application_date: input.applicationDate,
                 interview_date: input.interviewDate,
                 start_date: input.startDate,
-                memo: input.memo
+                memo: input.memo,
+                job_details: input.jobDetails,
+                job_summary: input.jobSummary,
             })
             .eq("id", id);
 }

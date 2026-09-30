@@ -12,6 +12,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import ShadowCard from "../ShadowCard";
 import ButtonGroup from "../../common/button/ButtonGroup";
 import LoadingOverlay from "../../common/loading/LoadingOverlay";
+import Collapsible from "./Collapsible";
+import TextareaField1 from "../../common/form/TextareaField1";
+import { summarizeJobDetails } from "../../../api/jobSummary";
 
 const FormContainer = () => {
     const { id } = useParams<{ id: string }>();
@@ -27,6 +30,10 @@ const FormContainer = () => {
     const [applicationDate, setApplicationDate] = useState<Date | null>(null);
     const [interviewDate, setInterviewDate] = useState<Date | null>(null);
     const [startDate, setStartDate] = useState<Date | null>(null);
+    const [jobDetails, setJobDetails] = useState("");
+    // 수정 모드) 처음 불러온 채용공고 내용과 요약
+    const [originalJobDetails, setOriginalJobDetails] = useState("");
+    const [savedJobSummary, setSavedJobSummary] = useState<string | null>(null);
     const [questions, setQuestions] = useState<QuestionAnswer[]>([
         { question: "", answer: "" },
     ]);
@@ -59,6 +66,9 @@ const FormContainer = () => {
                 setInterviewDate(application.interview_date ? new Date(application.interview_date) : null);
                 setStartDate(application.start_date ? new Date(application.start_date) : null);
                 setMemo(application.memo ?? "");
+                setJobDetails(application.job_details ?? "");
+                setOriginalJobDetails(application.job_details ?? "");
+                setSavedJobSummary(application.job_summary ?? null);
     
                 const { data: questionsData, error: questionsError } = await getInterviewQuestions(applicationId);
                 if (questionsError || !questionsData) {
@@ -101,7 +111,22 @@ const FormContainer = () => {
         interviewDate,
         startDate,
         memo,
+        jobDetails
     };
+
+    // 채용공고 내용을 AI로 요약 내용이 없거나 실패 시 null
+    const getJobSummary = async (): Promise<string | null> => {
+        if (jobDetails.trim() === "") return null;
+
+        const { summary, error } = await summarizeJobDetails(jobDetails);
+        if(error) {
+            console.error(error);
+            alert("AI 요약에 실패해 요약 없이 저장됩니다.");
+            return null;
+        }
+
+        return summary;
+    }
 
     // 등록
     const handleCreate = async () => {
@@ -113,9 +138,13 @@ const FormContainer = () => {
             return;
         }
 
+        // AI 요약
+        const jobSummary = await getJobSummary();
+
         const { data: application, error: applicationError } = await createApplication({
             userId: userData.user.id,
             ...applicationInput,
+            jobSummary,
         });
 
         if (applicationError || !application) {
@@ -137,7 +166,18 @@ const FormContainer = () => {
 
     // 수정
     const handleUpdate = async (applicationId: number) => {
-        const { error: updateError } = await updateApplication(applicationId, applicationInput);
+        // 채용공고 상세 내용이 변경되었을 때만 AI로 다시 요약하고 아니면 기존 요약을 유지
+        const isJobDetailsChanged = jobDetails.trim() !== originalJobDetails.trim();
+
+        let jobSummary = savedJobSummary;
+        if (isJobDetailsChanged) {
+            jobSummary = await getJobSummary();
+        }
+
+        const { error: updateError } = await updateApplication(applicationId, {
+            ...applicationInput,
+            jobSummary
+        });
         if (updateError) {
             alert("수정에 실패했습니다.");
             console.error(updateError);
@@ -211,6 +251,16 @@ const FormContainer = () => {
                             interviewDate={interviewDate} onInterviewDateChange={setInterviewDate}
                             startDate={startDate} onStartDateChange={setStartDate}
                         />
+                    </ShadowCard>
+                    <ShadowCard>
+                        <Collapsible title="채용공고 상세 내용">
+                            <TextareaField1
+                                textareaClassName="w-full h-50"
+                                value={jobDetails}
+                                onChange={(e) => setJobDetails(e.target.value)}
+                                placeholder="채용공고 내용을 입력해주세요."
+                            />
+                        </Collapsible>
                     </ShadowCard>
                     {/* 예상 면접 질문 */}
                     <ShadowCard>
