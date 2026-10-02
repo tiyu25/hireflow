@@ -42,7 +42,7 @@ const LoginContainer = () => {
 
     return (
         <div className="flex flex-col items-center justify-center h-screen bg-[#F7FAFE]">
-            <div className="w-100">
+            <div className="w-full md:w-100 px-8 md:px-0">
                 <div className="flex flex-col justify-center items-center">
                     <img src={Logo} alt="" />
                     <strong>취업 준비의 모든 과정을 한 곳에서</strong>

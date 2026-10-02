@@ -20,7 +20,7 @@ const GuestLoginButton = ({ onClick }: GuestLoginButtonProps) => {
                 <img
                     src={Bubble}
                     alt=""
-                    className="absolute left-50 top-0"
+                    className="absolute top-0 left-1/2 -translate-x-1/2"
                 />
                 <p className="inline-block py-1 px-3 text-sm text-white bg-primary rounded-2xl">
                     서비스의 주요 기능을 <b>로그인 없이 바로 체험</b>해보세요!
