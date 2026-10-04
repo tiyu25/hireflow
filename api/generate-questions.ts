@@ -1,6 +1,6 @@
 /// <reference types="node" />
 
-import { verifyUser } from "./_lib/auth.ts";
+import { verifyUser } from "./_lib/auth.js";
 
 // 채용공고를 바탕으로 AI 예상 면접 질문을 만들어주는 함수
 const MAX_TEXT_LENGTH = 15000;

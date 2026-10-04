@@ -1,6 +1,6 @@
 /// <reference types="node" />
 
-import { verifyUser } from "./_lib/auth.ts";
+import { verifyUser } from "./_lib/auth.js";
 
 // 텍스트 길이 제한
 const MAX_TEXT_LENGTH = 15000;
