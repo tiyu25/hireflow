@@ -1,5 +1,7 @@
 /// <reference types="node" />
 
+import { verifyUser } from "./_lib/auth.ts";
+
 // 채용공고를 바탕으로 AI 예상 면접 질문을 만들어주는 함수
 const MAX_TEXT_LENGTH = 15000;
 const MIN_TEXT_LENGTH = 50;
@@ -24,6 +26,12 @@ interface GeminiResponse {
 
 export async function POST(request: Request): Promise<Response> {
     try {
+        // 로그인 사용자인지 확인
+        const isAuthenticated = await verifyUser(request);
+        if (!isAuthenticated) {
+            return Response.json({ error: '로그인이 필요합니다.' }, { status: 401 });
+        }
+
         const apiKey = process.env.GEMINI_API_KEY;
         if (!apiKey) {
             return Response.json({ error: 'GEMINI_API_KEY가 설정되지 않았습니다.' }, { status: 500 });

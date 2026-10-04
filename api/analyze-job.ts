@@ -1,5 +1,7 @@
 /// <reference types="node" />
 
+import { verifyUser } from "./_lib/auth.ts";
+
 // 텍스트 길이 제한
 const MAX_TEXT_LENGTH = 15000;
 
@@ -28,6 +30,12 @@ interface GeminiResponse {
 
 export async function POST(request: Request): Promise<Response> {
   try {
+    // 로그인 사용자인지 확인
+    const isAuthenticated = await verifyUser(request);
+    if (!isAuthenticated) {
+      return Response.json({ error: '로그인이 필요합니다.' }, { status: 401 });
+    }
+    
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
       return Response.json({ error: 'GEMINI_API_KEY가 설정되지 않았습니다.' }, { status: 500 });

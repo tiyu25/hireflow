@@ -1,3 +1,5 @@
+import { supabase } from "../lib/supabase";
+
 interface JobSummaryResult {
     summary: string | null;
     error: string | null;
@@ -5,9 +7,20 @@ interface JobSummaryResult {
 
 export const summarizeJobDetails = async (jobDetails: string): Promise<JobSummaryResult> => {
     try {
+        // 현재 로그인 세션에서 토큰 꺼내기
+        const { data: sessionData } = await supabase.auth.getSession();
+        const token = sessionData.session?.access_token;
+
+        if (!token) {
+            return { summary: null, error: "로그인이 필요합니다." };
+        }
+
         const response = await fetch("/api/analyze-job", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
             body: JSON.stringify({ text: jobDetails }),
         });
 
