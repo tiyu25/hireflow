@@ -55,15 +55,21 @@ const DetailContainer = () => {
         if (!id) return;
         if (!confirm("삭제하시겠습니까?")) return;
 
-        const { error } = await deleteApplication(Number(id));
-        if (error) {
-            alert("삭제에 실패했습니다.");
-            console.error(error);
-            return;
-        }
+        setIsLoading(true);
 
-        alert("삭제되었습니다.");
-        navigate("/dashboard")
+        try {
+            const { error } = await deleteApplication(Number(id));
+            if (error) {
+                alert("삭제에 실패했습니다.");
+                console.error(error);
+                return;
+            }
+    
+            alert("삭제되었습니다.");
+            navigate("/dashboard")
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     return (

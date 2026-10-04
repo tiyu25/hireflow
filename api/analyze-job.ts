@@ -1,14 +1,8 @@
 /// <reference types="node" />
 
 import { verifyUser } from "./_lib/auth.js";
-
-// 텍스트 길이 제한
-const MAX_TEXT_LENGTH = 15000;
-
-// 텍스트 최소 길이
-const MIN_TEXT_LENGTH = 50;
-
-const GEMINI_MODEL = 'gemini-3.5-flash-lite';
+import { requestGeminiJson } from "./_lib/gemini.js";
+import { parseJobText } from "./_lib/jobText.js";
 
 const SYSTEM_PROMPT =
   '너는 구직자를 돕는 채용공고 분석가다. 구직자가 공고를 빠르게 파악할 수 있도록 한국어 2~3문장으로 요약하라. ' +
@@ -19,15 +13,6 @@ const SYSTEM_PROMPT =
   '공고에 없는 내용은 추측하지 마라. ' +
   '다음 JSON 형식으로만 답하라: {"summary": string}';
 
-// Gemini 응답에서 사용하는 부분만 타입으로 정의
-interface GeminiResponse {
-  candidates: {
-    content: {
-      parts: { text: string }[];
-    };
-  }[];
-}
-
 export async function POST(request: Request): Promise<Response> {
   try {
     // 로그인 사용자인지 확인
@@ -35,58 +20,20 @@ export async function POST(request: Request): Promise<Response> {
     if (!isAuthenticated) {
       return Response.json({ error: '로그인이 필요합니다.' }, { status: 401 });
     }
-    
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-      return Response.json({ error: 'GEMINI_API_KEY가 설정되지 않았습니다.' }, { status: 500 });
+
+    // 채용공고 텍스트 검사
+    const textResult = await parseJobText(request);
+    if (textResult.error !== null) {
+      return Response.json({ error: textResult.error }, { status: 400 });
     }
-
-    const body = (await request.json()) as { text?: unknown };
-
-    if (typeof body.text !== 'string') {
-      return Response.json({ error: '채용공고 내용을 입력해주세요.' }, { status: 400 });
-    }
-
-    // 앞뒤 공백을 제거한 뒤 길이 확인
-    const trimmedText = body.text.trim();
-
-    if (trimmedText.length < MIN_TEXT_LENGTH) {
-      return Response.json(
-        { error: `채용공고 내용을 ${MIN_TEXT_LENGTH}자 이상 입력해주세요.` },
-        { status: 400 },
-      );
-    }
-
-    const jobText = trimmedText.slice(0, MAX_TEXT_LENGTH);
 
     // Gemini에게 분석 요청
-    const aiResponse = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-goog-api-key': apiKey,
-        },
-        body: JSON.stringify({
-          systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
-          contents: [{ role: 'user', parts: [{ text: jobText }] }],
-          generationConfig: { responseMimeType: 'application/json' },
-        }),
-      },
-    );
-
-    if (!aiResponse.ok) {
-      const errorText = await aiResponse.text();
-      console.error('Gemini 에러:', errorText);
-      return Response.json({ error: 'AI 분석 요청에 실패했습니다.' }, { status: 500 });
+    const aiResult = await requestGeminiJson(SYSTEM_PROMPT, textResult.jobText);
+    if (aiResult.error !== null) {
+      return Response.json({ error: aiResult.error }, { status: 500 });
     }
 
-    const aiData = (await aiResponse.json()) as GeminiResponse;
-    const resultText = aiData.candidates[0].content.parts[0].text;
-    const analysis: unknown = JSON.parse(resultText);
-
-    return Response.json(analysis);
+    return Response.json(aiResult.data);
   } catch (error) {
     console.error('서버 에러:', error);
     return Response.json({ error: '서버에서 오류가 발생했습니다.' }, { status: 500 });
